@@ -68,17 +68,95 @@ export const WINDOW_CONFIG = {
     title: 'My Computer',
     icon: '/images/icons/about-me.png',
     defaultPosition: { x: 300, y: 150 },
-    defaultSize: { width: 500, height: 280 },
+    defaultSize: { width: 600, height: 380 },
     content: (
-      <div className="space-y-4 text-sm leading-relaxed">
-        <p>
-          I built this portfolio over a weekend in March 2024. The goal was to create a website that better showcases 
-          my frontend development skills. Technologies used include React, Tailwind CSS, and modern JavaScript patterns.
-        </p>
-        <p>
-          This Windows 98-inspired interface pays homage to the operating system that first sparked my interest in 
-          technology and software development.
-        </p>
+      <div className="bg-[#c0c0c0] p-1 text-[11px] font-sans">
+        {/* Tabs */}
+        <div className="flex  mb-1">
+          <div 
+            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+            style={{
+              border: '2px solid',
+              borderColor: 'white #808080 #c0c0c0 white'
+            }}
+          >
+            General
+          </div>
+          <div 
+            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+            style={{
+              border: '2px solid',
+              borderColor: 'white #808080 #c0c0c0 white'
+            }}
+          >
+            Device Manager
+          </div>
+          <div 
+            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+            style={{
+              border: '2px solid',
+              borderColor: 'white #808080 #c0c0c0 white'
+            }}
+          >
+            Hardware Profiles
+          </div>
+          <div 
+            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+            style={{
+              border: '2px solid',
+              borderColor: 'white #808080 #c0c0c0 white'
+            }}
+          >
+            performance
+          </div>
+        </div>
+
+        {/* Content */}
+        <div 
+          className="p-4 bg-transparent"
+          style={{
+            border: '2px solid',
+            borderColor: '#808080 white white #808080',
+            boxShadow: 'inset 1px 1px 0 #404040'
+          }}
+        >
+          <div className="flex gap-6 items-start">
+            {/* Icon */}
+            <div 
+              className="w-16 h-16 flex items-center justify-center border-none bg-transparent"
+            >
+              <img 
+                className='border-none bg-transparent'
+                src="/images/icons/pc.png" 
+                alt="" />
+            </div>
+
+            {/* Info */}
+            <div className="text-black text-xs space-y-4">
+              <div><strong>System:</strong></div>
+              <div className='ml-8'><strong>User:</strong><br></br>Sajad Ali Zada</div>
+              <div><strong>Location:</strong> Montreal, QC</div>
+              <div><strong>Education:</strong> Concordia University, Computer Science</div>
+              <div><strong>OS:</strong> Human_Interface_v2.0</div>
+              <div><strong>Uptime:</strong> 23 Years</div>
+            </div>
+          </div>
+
+         
+        </div>
+         {/* Buttons */}
+          <div className="flex justify-end gap-2 mt-4">
+            <button 
+              className="px-4 py-1 text-black text-xs"
+              style={{
+                background: 'linear-gradient(90deg, #c1c1c1 0%, #cccacaff 100%)',
+                border: '2px solid',
+                borderColor: 'white #808080 #808080 white'
+              }}
+            >
+              OK
+            </button>
+          </div>
       </div>
     )
   },
@@ -86,8 +164,8 @@ export const WINDOW_CONFIG = {
   cv: {
     title: 'My CV',
     icon: '/images/icons/my-CV.png',
-    defaultPosition: { x: 350, y: 200 },
-    defaultSize: { width: 400, height: 500 },
+    defaultPosition: { x: 250, y: 50 },
+    defaultSize: { width: 500, height: 600 },
     content: (
       <div className="flex justify-center">
         <img src="/images/sajad-resume.png" alt="Sajad's Resume" className="max-w-full h-auto" />
@@ -126,28 +204,164 @@ export const WINDOW_CONFIG = {
     icon: '/images/icons/joy.png',
     defaultPosition: { x: 450, y: 300 },
     defaultSize: { width: 500, height: 400 },
-    content: (
-      <div className="space-y-4 text-sm leading-relaxed">
-        <h3 className="font-bold text-base mb-2">Notable Projects</h3>
-        <div className="space-y-3">
-          <div className="border-b pb-2">
-            <h4 className="font-semibold">Portfolio Website</h4>
-            <p className="text-xs">Windows 98-inspired React portfolio with draggable windows</p>
-            <p className="text-xs text-gray-600">React, Tailwind CSS, Custom Hooks</p>
+    content: (() => {
+      const ProjectsPanel = () => {
+        const [selectedProject, setSelectedProject] = React.useState(0);
+        
+        const projects = [
+          {
+            name: 'StudyConnect Platform',
+            tech: 'Spring Boot, AWS, Java',
+            description: 'Full-stack platform for students',
+            status: 'Active Development',
+            sourceUrl: 'https://github.com/sajad42/studyconnect',
+            demoUrl: 'https://d3hl37aapqqsoq.cloudfront.net/'
+          },
+          {
+            name: 'Portfolio Website',
+            tech: 'React, Tailwind CSS',
+            description: 'Windows 98-inspired portfolio',
+            status: 'Completed',
+            sourceUrl: 'https://github.com/sajad42/Portfolio-website',
+            demoUrl: 'https://main.d3a6cq397zfehj.amplifyapp.com/'
+          },
+          {
+            name: 'Data Analysis Suite',
+            tech: 'Python, Pandas, Scikit-learn',
+            description: 'Machine learning projects',
+            status: 'In Progress',
+            sourceUrl: '#',
+            demoUrl: '#'
+          },
+          {
+            name: 'Smart Food App',
+            tech: 'React Native, Node.js',
+            description: 'Mobile app for food tracking',
+            status: 'In Progress',
+            sourceUrl: '#',
+            demoUrl: '#'
+          }
+        ];
+        
+        return (
+          <div className="bg-[#c0c0c0] p-1 text-[11px] font-sans">
+            {/* Tabs */}
+            <div className="flex mb-1">
+              <div 
+                className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+                style={{
+                  border: '2px solid',
+                  borderColor: 'white #808080 #c0c0c0 white'
+                }}
+              >
+                General
+              </div>
+              <div 
+                className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+                style={{
+                  border: '2px solid',
+                  borderColor: 'white #808080 #c0c0c0 white'
+                }}
+              >
+                Web Apps
+              </div>
+              <div 
+                className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
+                style={{
+                  border: '2px solid',
+                  borderColor: 'white #808080 #c0c0c0 white'
+                }}
+              >
+                Data Science
+              </div>
+            </div>
+
+            {/* Content */}
+            <div 
+              className="p-4 bg-[#c0c0c0]"
+              style={{
+                border: '2px solid',
+                borderColor: '#808080 white white #808080',
+                boxShadow: 'inset 1px 1px 0 #404040'
+              }}
+            >
+              <div className="flex gap-6">
+                {/* Left: Project List */}
+                <div className="flex-1">
+                  <p className="mb-3 text-xs">Select a project to view details:</p>
+                  
+                  <div 
+                    className="bg-[#c0c0c0] h-32 overflow-y-auto mb-4"
+                    style={{
+                      border: '2px solid',
+                      borderColor: '#808080 white white #808080',
+                      boxShadow: 'inset 1px 1px 0 #404040'
+                    }}
+                  >
+                    {projects.map((project, index) => (
+                      <div 
+                        key={index}
+                        className={`px-2 py-1 text-xs cursor-pointer ${
+                          selectedProject === index 
+                            ? 'bg-[#000080] text-white' 
+                            : 'hover:bg-[#000080] hover:text-white'
+                        }`}
+                        onClick={() => setSelectedProject(index)}
+                      >
+                        📁 {project.name}
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Project Details */}
+                  <div 
+                    className="p-3 bg-[#dfdfdf] text-xs"
+                    style={{
+                      border: '2px solid',
+                      borderColor: '#808080 white white #808080',
+                      boxShadow: 'inset 1px 1px 0 #404040'
+                    }}
+                  >
+                    <div><strong>Project:</strong> {projects[selectedProject].name}</div>
+                    <div><strong>Tech Stack:</strong> {projects[selectedProject].tech}</div>
+                    <div><strong>Description:</strong> {projects[selectedProject].description}</div>
+                    <div><strong>Status:</strong> {projects[selectedProject].status}</div>
+                  </div>
+                </div>
+
+                {/* Right: Action Buttons */}
+                <div className="flex flex-col gap-2">
+                  <button 
+                    className="px-3 py-1 text-xs"
+                    style={{
+                      background: 'linear-gradient(90deg, #c1c1c1 0%, #cccacaff 100%)',
+                      border: '2px solid',
+                      borderColor: 'white #808080 #808080 white'
+                    }}
+                    onClick={() => window.open(projects[selectedProject].sourceUrl, '_blank')}
+                  >
+                    View Source
+                  </button>
+                  <button 
+                    className="px-3 py-1 text-xs"
+                    style={{
+                      background: 'linear-gradient(90deg, #c1c1c1 0%, #cccacaff 100%)',
+                      border: '2px solid',
+                      borderColor: 'white #808080 #808080 white'
+                    }}
+                    onClick={() => window.open(projects[selectedProject].demoUrl, '_blank')}
+                  >
+                    Live Demo
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="border-b pb-2">
-            <h4 className="font-semibold">Data Science Projects</h4>
-            <p className="text-xs">Machine learning and data analysis projects</p>
-            <p className="text-xs text-gray-600">Python, Pandas, Scikit-learn</p>
-          </div>
-          <div>
-            <h4 className="font-semibold">Web Applications</h4>
-            <p className="text-xs">Full-stack applications with modern frameworks</p>
-            <p className="text-xs text-gray-600">React, Node.js, PostgreSQL</p>
-          </div>
-        </div>
-      </div>
-    )
+        );
+      };
+      
+      return <ProjectsPanel />;
+    })()
   }
 };
 

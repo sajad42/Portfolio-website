@@ -112,7 +112,7 @@ export const Window = ({
 
       {/* Content */}
       <div 
-        className="bg-white p-2 m-1 mt-0 overflow-auto text-xs"
+        className="p-2 m-1 mt-0 overflow-auto text-xs"
         style={{ 
           minHeight: defaultSize.height - 60,
           border: '2px solid',
