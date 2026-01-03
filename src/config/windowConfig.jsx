@@ -12,9 +12,9 @@ export const WINDOW_CONFIG = {
         <p>
           I am a Computer Science undergraduate student with a strong interest in software engineering and modern web development. I enjoy building practical, user-focused applications and turning ideas into clean, functional products.
 
-My experience spans frontend and full-stack development, with hands-on work using technologies like React, Tailwind CSS, and backend frameworks. I particularly enjoy working on projects that combine thoughtful UI design with solid engineering principles.
+My experience spans frontend and full-stack development. I have worked with React and Tailwind CSS on the frontend, and with Spring Boot and JWT-based authentication on the backend. I am also familiar with deploying and running applications using Docker and AWS.
 
-I am highly motivated to keep learning, whether through personal projects, competitive programming, or exploring new tools and technologies. I’m especially interested in scalable systems, real-world problem solving, and building software that people actually enjoy using.
+I am highly motivated to keep learning through hands-on projects, competitive programming, and exploring new technologies. I am particularly interested in scalable systems, real-world problem solving, and building software that is both reliable and enjoyable to use.
         </p>
       </div>
     )
