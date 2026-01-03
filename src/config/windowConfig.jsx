@@ -10,25 +10,12 @@ export const WINDOW_CONFIG = {
     content: (
       <div className="space-y-4 text-sm leading-relaxed">
         <p>
-          I am currently studying for a master's degree in Data Science at the University of Helsinki. Previously, I
-          worked as a software engineer at{' '}
-          <a href="#" className="text-primary underline hover:text-primary/80">
-            Compound
-          </a>
-          . I have over a decade of experience building various kinds of software products, both collaboratively and
-          independently.
+          I am a Computer Science undergraduate student with a strong interest in software engineering and modern web development. I enjoy building practical, user-focused applications and turning ideas into clean, functional products.
+
+My experience spans frontend and full-stack development, with hands-on work using technologies like React, Tailwind CSS, and backend frameworks. I particularly enjoy working on projects that combine thoughtful UI design with solid engineering principles.
+
+I am highly motivated to keep learning, whether through personal projects, competitive programming, or exploring new tools and technologies. I’m especially interested in scalable systems, real-world problem solving, and building software that people actually enjoy using.
         </p>
-        <p>
-          I am deeply passionate about AI but also enthusiastic about exploring other emerging technologies and the
-          intricacies of how startups operate.
-        </p>
-        <div>
-          <h3 className="font-bold text-base mb-2">Formal Education</h3>
-          <ul className="space-y-1">
-            <li>M.Sc. in Data Science, University of Helsinki (Graduating Summer 2026)</li>
-            <li>B.Sc. in Computer Science, University of Helsinki (June 2021)</li>
-          </ul>
-        </div>
       </div>
     )
   },
