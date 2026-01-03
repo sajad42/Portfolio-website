@@ -171,15 +171,13 @@ I am highly motivated to keep learning through hands-on projects, competitive pr
         <div className="space-y-3">
           <div>
             <h4 className="font-semibold">Software Engineer at Compound</h4>
-            <p className="text-xs text-gray-600">Building scalable financial applications</p>
+            <p className="text-xs text-gray-600">Building scalable AI applications</p>
           </div>
           <div>
-            <h4 className="font-semibold">Data Science Studies</h4>
-            <p className="text-xs text-gray-600">University of Helsinki - Current</p>
+            <h4 className="font-semibold">Computer Science Studies</h4>
+            <p className="text-xs text-gray-600">Concorida University</p>
           </div>
           <div>
-            <h4 className="font-semibold">Computer Science Degree</h4>
-            <p className="text-xs text-gray-600">University of Helsinki - 2021</p>
           </div>
         </div>
       </div>
