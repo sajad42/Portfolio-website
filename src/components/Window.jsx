@@ -94,7 +94,7 @@ export const Window = ({
     >
       {/* Title Bar */}
       <div
-        className="flex items-center justify-between px-1 py-1 m-1 select-none cursor-move touch-none"
+        className="flex items-center justify-between px-1 py-1 m-1 select-none touch-none"
         style={{ background: 'linear-gradient(90deg, #000080 0%, #1084d0 100%)' }}
         onMouseDown={handleStart}
         onTouchStart={handleStart}
