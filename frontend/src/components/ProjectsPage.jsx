@@ -133,7 +133,7 @@ export const ProjectsPage = () => {
                     <div><strong>Project:</strong> {projects[selectedProject].repo_name}</div>
                     <div><strong>Tech Stack:</strong> {projects[selectedProject].languages.map(lang => lang).join(', ')}</div>
                     <div><strong>Description:</strong> {projects[selectedProject].ai_description}</div>
-                    <div><strong>Status:</strong> {projects[selectedProject].status}</div>
+                    <div><strong>Status:</strong> {projects[selectedProject].project_status}</div>
                   </div>
                 </div>
 
@@ -146,7 +146,7 @@ export const ProjectsPage = () => {
                       border: '2px solid',
                       borderColor: 'white #808080 #808080 white'
                     }}
-                    onClick={() => window.open(projects[selectedProject].sourceUrl, '_blank')}
+                    onClick={() => window.open(projects[selectedProject].project_source_url, '_blank')}
                   >
                     View Source
                   </button>
@@ -157,7 +157,7 @@ export const ProjectsPage = () => {
                       border: '2px solid',
                       borderColor: 'white #808080 #808080 white'
                     }}
-                    onClick={() => window.open(projects[selectedProject].demoUrl, '_blank')}
+                    onClick={() => window.open(projects[selectedProject].homepage_url, '_blank')}
                   >
                     Live Demo
                   </button>

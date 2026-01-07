@@ -55,6 +55,9 @@ class Project(Base):
     languages: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=True, default=[])
     last_commit_hash: Mapped[str] = mapped_column(String(255), nullable=True)
     ai_description: Mapped[str] = mapped_column(Text, nullable=True)
+    homepage_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    project_source_url: Mapped[str] = mapped_column(String(500), nullable=True)
+    project_status: Mapped[str] = mapped_column(String(50), nullable=True)
     last_updated: Mapped[datetime.datetime] = mapped_column(
         DateTime, 
         default=datetime.datetime.utcnow, 
@@ -64,6 +67,8 @@ class Project(Base):
 # Helper to create tables if they don't exist
 def init_db():
     if test_connection():
+        # Drop and recreate tables to ensure schema is up to date
+        Base.metadata.drop_all(bind=engine)
         Base.metadata.create_all(bind=engine)
         print("✅ Database tables created successfully!")
     else:
