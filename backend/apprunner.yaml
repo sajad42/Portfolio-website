@@ -11,5 +11,8 @@ run:
   command: python3 -m uvicorn main:app --host 0.0.0.0 --port 8080
   network:
     port: 8080
+  env:
+    - name: PORT
+      value: 8080
   # Adding this ensures we are in the right folder during runtime
   working-directory: backend
