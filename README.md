@@ -30,7 +30,6 @@ The backend provides interactive documentation at
 | `/api/sync-github` | `POST` | Manually triggers a full synchronization cycle with the GitHub API. |
 | `/api/github-webhook` | `POST` | Secure endpoint for real-time push, delete, and privacy events. |
 
-```
 
 ## 🛠 Tech Stack
 - **Frontend:** React + Vite (hosted on AWS Amplify)
