@@ -16,11 +16,17 @@ graph LR
     E[Recruiter Browser] -->|Fast Fetch| B
     B -->|JSON| E
 
-## 📖 API Reference
-The backend provides an interactive Swagger UI at `https://your-render-url.com/docs`.
+
+---
+
+### **Step 4: Document the Endpoints**
+Explain the routes you built in `main.py` so recruiters know how to interact with your API.
+
+```markdown
+The backend provides interactive documentation at `https://portfolio-website-98ei.onrender.com/docs`.
 
 | Endpoint | Method | Description |
 | :--- | :--- | :--- |
-| `/api/projects` | `GET` | Returns a cached list of projects from PostgreSQL. |
-| `/api/sync-github` | `POST` | Manually triggers a full synchronization cycle. |
-| `/api/github-webhook` | `POST` | Secure endpoint for GitHub real-time event updates. |
+| `/api/projects` | `GET` | Fetches synchronized projects directly from the PostgreSQL database. |
+| `/api/sync-github` | `POST` | Manually triggers a full synchronization cycle with the GitHub API. |
+| `/api/github-webhook` | `POST` | Secure endpoint for real-time push, delete, and privacy events. |
