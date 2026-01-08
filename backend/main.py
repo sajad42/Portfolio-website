@@ -116,26 +116,32 @@ def get_projects_from_db(db: Session = Depends(get_db)):
 
 @app.post("/api/sync-github")
 def sync_with_github(db: Session = Depends(get_db)):
-    """Manually trigger a sync. Later, your Webhook will call this logic."""
     username = "sajad42"
     url = f"https://api.github.com/users/{username}/repos"
-    response = requests.get(url)
-    repos = response.json()
-    print(f"Syncing {len(repos)} projects from GitHub...")
-
     
+    # Professional Tip: Always include a User-Agent for GitHub API
+    headers = {"User-Agent": "FastAPI-Portfolio-App"}
+    response = requests.get(url, headers=headers)
+    
+    # Check if the request actually worked
+    if response.status_code != 200:
+        error_detail = response.json().get("message", "Unknown GitHub Error")
+        print(f"❌ GitHub API Error: {error_detail}")
+        raise HTTPException(status_code=response.status_code, detail=error_detail)
 
+    repos = response.json()
+    
+    # Ensure we got a list of repositories
+    if not isinstance(repos, list):
+        print(f"❌ Unexpected response format from GitHub: {repos}")
+        raise HTTPException(status_code=500, detail="Invalid data format from GitHub")
+
+    print(f"✅ Syncing {len(repos)} projects from GitHub...")
     
     for repo in repos:
-        # Debug: Print repo data to see available fields
-        print(f"Repo data keys: {list(repo.keys())}")
-        print(f"HTML URL: {repo.get('html_url')}")
-        
         # Fetch languages for each repo
-        lang_url = f"https://api.github.com/repos/{username}/{repo['name']}/languages"
-        print(f"Fetching languages for {repo['name']}")
-        print(f"URL: {lang_url}")
-        langs_response = requests.get(lang_url)
+        lang_url = repo.get('languages_url') # Better than building it manually
+        langs_response = requests.get(lang_url, headers=headers)
         repo['languages'] = list(langs_response.json().keys()) if langs_response.status_code == 200 else []
 
         upsert_project_data(db, repo)
