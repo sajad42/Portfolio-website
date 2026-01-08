@@ -178,6 +178,9 @@ def delete_repo(db: Session, repo_name: str):
 
 @app.post("/api/github-webhook")
 async def github_webhook(request: Request, db: Session = Depends(get_db)):
+
+    print("Received GitHub webhook eventssssss.")
+
     # 1. Capture RAW bytes for HMAC validation
     body = await request.body()
     signature = request.headers.get("X-Hub-Signature-256")
@@ -198,6 +201,8 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
     repo_name = repo_data.get("name")
     action = payload.get("action")
     print(f"Action received: {action} for repo: {repo_name}")
+
+
     # --- BRANCH 1: PUSH EVENT ---
     if "pusher" in payload:
         print(f"Push detected for {repo_name}. Syncing data...")
