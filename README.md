@@ -15,3 +15,12 @@ graph LR
     B --> C
     E[Recruiter Browser] -->|Fast Fetch| B
     B -->|JSON| E
+
+## 📖 API Reference
+The backend provides an interactive Swagger UI at `https://your-render-url.com/docs`.
+
+| Endpoint | Method | Description |
+| :--- | :--- | :--- |
+| `/api/projects` | `GET` | Returns a cached list of projects from PostgreSQL. |
+| `/api/sync-github` | `POST` | Manually triggers a full synchronization cycle. |
+| `/api/github-webhook` | `POST` | Secure endpoint for GitHub real-time event updates. |
