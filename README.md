@@ -20,11 +20,6 @@ graph TD;
 
 ```
 
----
-
-### **Step 4: Document the Endpoints**
-Explain the routes you built in `main.py` so recruiters know how to interact with your API.
-
 ```markdown
 The backend provides interactive documentation at `https://portfolio-website-98ei.onrender.com/docs`.
 
@@ -34,7 +29,7 @@ The backend provides interactive documentation at `https://portfolio-website-98e
 | `/api/sync-github` | `POST` | Manually triggers a full synchronization cycle with the GitHub API. |
 | `/api/github-webhook` | `POST` | Secure endpoint for real-time push, delete, and privacy events. |
 
-
+```
 
 🚀 Key Engineering Achievements
 Real-Time Data Pipeline: Implemented GitHub Webhooks to automate the full repository lifecycle, synchronizing stars, languages, and visibility status instantly.
