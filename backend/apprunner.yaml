@@ -4,7 +4,7 @@ build:
   commands:
     build:
       - python3 -m pip install --upgrade pip
-      - python3 -m pip install -r requirements.txt
+      - python3 -m pip install -r requirements.txt -t
 run:
   runtime-version: 3.11
   # This tells AWS to look inside the backend folder for your code
