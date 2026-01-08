@@ -1,5 +1,8 @@
+import json
 import os
 import requests
+import hmac
+import hashlib
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
@@ -150,11 +153,38 @@ def sync_with_github(db: Session = Depends(get_db)):
 
 from fastapi import Request
 
+def validate_hmac(signature: str, payload: bytes, secret: str) -> bool:
+    if not signature or not secret:
+        return False
+    
+    expected = hmac.new(
+        secret.encode('utf-8'),
+        payload,
+        hashlib.sha256
+    ).hexdigest()
+    
+    received = signature.replace('sha256=', '') if signature.startswith('sha256=') else signature
+    return hmac.compare_digest(expected, received)
+
 @app.post("/api/github-webhook")
 async def github_webhook(request: Request, db: Session = Depends(get_db)):
     # 1. Capture the payload from GitHub
     payload = await request.json()
+
+    signature = request.headers.get("X-Hub-Signature-256")
+
+    secret = os.getenv("GITHUB_WEBHOOK_SECRET")
+    if not validate_hmac(signature, payload, secret):
+        print("❌ Webhook validation failed: Invalid Signature")
+        raise HTTPException(status_code=403, detail="Invalid signature")
     
+    i# 4. NOW it is safe to parse the JSON
+    try:
+        payload = json.loads(payload)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Invalid JSON")
+
+
     # 2. Extract key info (Deep Concept: Parsing nested JSON)
     repo_data = payload.get("repository", {})
     repo_name = repo_data.get("name")
