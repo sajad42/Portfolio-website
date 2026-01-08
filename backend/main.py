@@ -112,6 +112,10 @@ def upsert_project_data(db: Session, repo_data: dict):
 
 # --- ENDPOINTS ---
 
+@app.get("/")
+def health_check():
+    return {"status": "healthy"}
+
 @app.get("/api/projects")
 def get_projects_from_db(db: Session = Depends(get_db)):
     """Fetches projects from PostgreSQL instead of calling GitHub every time."""
