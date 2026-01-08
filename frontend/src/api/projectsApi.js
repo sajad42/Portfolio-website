@@ -1,14 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+// frontend/src/api/projectsApi.js
+
+// Ensure this matches your Render URL exactly, without a trailing slash
+const API_URL = import.meta.env.VITE_API_URL || "https://portfolio-website-98ei.onrender.com";
 
 export const projectsApi = {
   async getProjects() {
-    try {
-      const response = await fetch(`${API_BASE_URL}`);
-      if (!response.ok) throw new Error('Failed to fetch projects');
-      return await response.json();
-    } catch (error) {
-      console.error('Projects API error:', error);
-      throw error;
+    // Make sure the path '/api/projects' is appended here
+    const response = await fetch(`${API_URL}/api/projects`); 
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+    return await response.json();
   }
 };
