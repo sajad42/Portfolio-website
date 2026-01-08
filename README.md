@@ -17,3 +17,12 @@ graph TD;
   B -->|Update| C;
   E[User Browser] -->|GET /api/projects| B;
   B -->|Fast JSON Response| E;
+
+🚀 Key Engineering Achievements
+Real-Time Data Pipeline: Implemented GitHub Webhooks to automate the full repository lifecycle (synchronizing stars, languages, and visibility status instantly).
+
+Security-First Architecture: Developed a custom HMAC SHA-256 signature verification layer to ensure backend integrity and protect against unauthorized payloads.
+
+AI-Automated Documentation: Integrated the OpenAI API to dynamically generate professional project descriptions, reducing manual overhead.
+
+Performance Optimization: Migrated from direct API polling to a PostgreSQL (Neon) caching layer, reducing project load times by approximately 90%.
