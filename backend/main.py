@@ -197,7 +197,7 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
     repo_data = payload.get("repository", {})
     repo_name = repo_data.get("name")
     action = payload.get("action")
-    
+    print(f"Action received: {action} for repo: {repo_name}")
     # --- BRANCH 1: PUSH EVENT ---
     if "pusher" in payload:
         print(f"Push detected for {repo_name}. Syncing data...")
