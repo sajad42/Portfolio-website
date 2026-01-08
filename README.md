@@ -20,7 +20,6 @@ graph TD;
 
 ```
 
-```markdown
 The backend provides interactive documentation at
 `https://portfolio-website-98ei.onrender.com/docs`.
 
