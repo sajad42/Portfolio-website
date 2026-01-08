@@ -166,52 +166,73 @@ def validate_hmac(signature: str, payload: bytes, secret: str) -> bool:
     received = signature.replace('sha256=', '') if signature.startswith('sha256=') else signature
     return hmac.compare_digest(expected, received)
 
+# Delete project helper
+def delete_repo(db: Session, repo_name: str):
+    project = db.query(Project).filter(Project.repo_name == repo_name).first()
+    if project:
+        db.delete(project)
+        db.commit()
+        print(f"Deleted project: {repo_name}")
+    else:
+        print(f"Project {repo_name} not found for deletion.")
+
 @app.post("/api/github-webhook")
 async def github_webhook(request: Request, db: Session = Depends(get_db)):
-    # 1. Capture the payload from GitHub
-    payload = await request.json()
-
+    # 1. Capture RAW bytes for HMAC validation
+    body = await request.body()
     signature = request.headers.get("X-Hub-Signature-256")
-
     secret = os.getenv("GITHUB_WEBHOOK_SECRET")
-    if not validate_hmac(signature, payload, secret):
+
+    if not validate_hmac(signature, body, secret):
         print("❌ Webhook validation failed: Invalid Signature")
         raise HTTPException(status_code=403, detail="Invalid signature")
     
-    i# 4. NOW it is safe to parse the JSON
+    # 2. Safely parse the JSON now that it's verified
     try:
-        payload = json.loads(payload)
+        payload = json.loads(body)
     except json.JSONDecodeError:
         raise HTTPException(status_code=400, detail="Invalid JSON")
 
-
-    # 2. Extract key info (Deep Concept: Parsing nested JSON)
+    # 3. Extract common info
     repo_data = payload.get("repository", {})
     repo_name = repo_data.get("name")
+    action = payload.get("action")
     
-    # Check if this is a 'push' event
+    # --- BRANCH 1: PUSH EVENT ---
     if "pusher" in payload:
         print(f"Push detected for {repo_name}. Syncing data...")
-        
-        # 3. Use your existing logic to update the DB
-        # We fetch fresh data from the repo object in the payload
         sync_data = {
             "name": repo_name,
             "stargazers_count": repo_data.get("stargazers_count"),
             "language": repo_data.get("language"),
             "homepage": repo_data.get("homepage"),
             "topics": repo_data.get("topics", []),
-            "commit_hash": payload.get("after") # The 'after' field is the new commit SHA
+            "commit_hash": payload.get("after") 
         }
-        
         upsert_project_data(db, sync_data)
-        
-        # 4. Deep Concept: Event-Driven AI
-        # We only trigger AI if the description is missing or force-updated
-        # You could even check if the commit message contains "#ai-update"
         return {"status": "Database updated via Webhook"}
+    
+    # --- BRANCH 2: DELETED OR PRIVATIZED ---
+    elif action in ["deleted", "privatized"]:
+        print(f"Action '{action}' detected for {repo_name}. Removing from DB...")
+        delete_repo(db, repo_name)
+        return {"status": f"Repository {action} handled via Webhook"}
+    
+    # --- BRANCH 3: PUBLICIZED ---
+    elif action == "publicized":
+        print(f"Repository {repo_name} made public. Restoring to portfolio...")
+        sync_data = {
+            "name": repo_name,
+            "stargazers_count": repo_data.get("stargazers_count"),
+            "language": repo_data.get("language"),
+            "homepage": repo_data.get("homepage"),
+            "topics": repo_data.get("topics", []),
+            "commit_hash": repo_data.get("default_branch") # No 'after' hash in this event
+        }
+        upsert_project_data(db, sync_data)
+        return {"status": "Repository restored via Webhook"}
 
-    return {"status": "Ignored non-push event"}
+    return {"status": "Ignored event"}
 
 @app.get("/api/generate-description")
 async def generate_description(repo_name: str, db: Session = Depends(get_db)):
