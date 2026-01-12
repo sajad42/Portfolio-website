@@ -1,20 +1,15 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim
+# 1. Use the official AWS Lambda Python base image
+FROM public.ecr.aws/lambda/python:3.11
 
-# Set the working directory in the container
-WORKDIR /app
+# 2. Copy requirements.txt to the Lambda task root
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# 3. Install dependencies directly into the task root
+RUN pip install -r requirements.txt
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# 4. Copy all your backend code into the task root
+COPY . ${LAMBDA_TASK_ROOT}
 
-# Copy the rest of the backend code
-COPY . .
-
-# Expose the port FastAPI runs on
-EXPOSE 8080
-
-# Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# 5. Set the CMD to your Mangum handler
+# This assumes your file is main.py and your Mangum wrapper is named 'handler'
+CMD [ "main.handler" ]

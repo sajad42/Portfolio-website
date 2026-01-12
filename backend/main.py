@@ -9,13 +9,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
 from openai import OpenAI
 from dotenv import load_dotenv
+from mangum import Mangum
 
 from database import SessionLocal, Project, init_db
 
 load_dotenv()
 init_db()  # Ensure tables are created on startup
 
-app = FastAPI()
+app = FastAPI(root_path="/default")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app.add_middleware(
@@ -111,16 +112,16 @@ def upsert_project_data(db: Session, repo_data: dict):
 
 # --- ENDPOINTS ---
 
-@app.get("/")
+@app.get("/portfolio-backend-api")
 def health_check():
     return {"status": "healthy"}
 
-@app.get("/api/projects")
+@app.get("/portfolio-backend-api/api/projects")
 def get_projects_from_db(db: Session = Depends(get_db)):
     """Fetches projects from PostgreSQL instead of calling GitHub every time."""
     return db.query(Project).all()
 
-@app.post("/api/sync-github")
+@app.post("/portfolio-backend-api/api/sync-github")
 def sync_with_github(db: Session = Depends(get_db)):
     username = "sajad42"
     url = f"https://api.github.com/users/{username}/repos"
@@ -179,7 +180,7 @@ def delete_repo(db: Session, repo_name: str):
     else:
         print(f"Project {repo_name} not found for deletion.")
 
-@app.post("/api/github-webhook")
+@app.post("/portfolio-backend-api/api/github-webhook")
 async def github_webhook(request: Request, db: Session = Depends(get_db)):
 
     print("Received GitHub webhook eventssssss.")
@@ -242,7 +243,7 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
 
     return {"status": "Ignored event"}
 
-@app.get("/api/generate-description")
+@app.get("/portfolio-backend-api/api/generate-description")
 async def generate_description(repo_name: str, db: Session = Depends(get_db)):
     # Check if we already have it in the DB
     project = db.query(Project).filter(Project.repo_name == repo_name).first()
@@ -264,3 +265,14 @@ async def generate_description(repo_name: str, db: Session = Depends(get_db)):
         
     return {"description": ai_text, "source": "openai"}
 
+@app.middleware("http")
+async def log_requests(request, call_next):
+    print(f"Request path: {request.url.path}")
+    response = await call_next(request)
+    return response
+@app.get("/{full_path:path}")
+async def catch_all(full_path: str):
+    return {"message": "You hit the catch-all route!", "path_received": full_path}
+
+# Lambda handler with debuggingASAD
+handler = Mangum(app, lifespan="off")
