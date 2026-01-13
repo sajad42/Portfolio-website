@@ -169,6 +169,6 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
-    return {"message": "Default route", "path_received": full_path}
+    return {"message": "Default route", "path_receivedd": full_path}
 
 handler = Mangum(app, lifespan="off")
