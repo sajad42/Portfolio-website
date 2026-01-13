@@ -17,7 +17,8 @@ from database import SessionLocal, Project, init_db
 load_dotenv()
 init_db()  # Ensure tables are created on startup
 
-app = FastAPI()
+# Setting root_path helps Swagger UI find /openapi.json correctly on AWS
+app = FastAPI(root_path="/default/portfolio-backend-api")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app.add_middleware(
@@ -30,25 +31,16 @@ app.add_middleware(
 # --- THE UNIVERSAL PATH CLEANER ---
 @app.middleware("http")
 async def fix_gateway_pathing(request: Request, call_next):
-    """
-    This middleware detects if the path has 'default' or 'portfolio-backend-api' 
-    and strips them so the internal routes below match correctly.
-    """
     path = request.scope["path"]
     
-    # Remove the Stage and Resource Name from the internal path 
-    # so FastAPI only sees the /api/... part
+    # Strip prefixes if they are doubled up by Mangum/Gateway
     path = path.replace("/default", "")
     path = path.replace("/portfolio-backend-api", "")
     
-    # Ensure it starts with a /
     if not path.startswith("/"):
         path = "/" + path
     
-    # Standardize: remove double slashes
     request.scope["path"] = path.replace("//", "/")
-    
-    print(f"DEBUG: Internal Routing Path used: {request.scope['path']}")
     return await call_next(request)
 
 # --- DEPENDENCIES & HELPERS ---
@@ -59,6 +51,13 @@ def get_db():
         yield db
     finally:
         db.close()
+
+def validate_hmac(signature: str, payload: bytes, secret: str) -> bool:
+    if not signature or not secret:
+        return False
+    expected = hmac.new(secret.encode('utf-8'), payload, hashlib.sha256).hexdigest()
+    received = signature.replace('sha256=', '') if signature.startswith('sha256=') else signature
+    return hmac.compare_digest(expected, received)
 
 def extract_status_from_topics(topics):
     if "status-done" in topics: return "Done"
@@ -74,8 +73,8 @@ def generate_ai_description(repo_name: str) -> str:
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"AI generation failed for {repo_name}: {e}")
-        return "AI description unavailable"
+        print(f"AI generation failed: {e}")
+        return "AI description currently unavailable"
 
 def upsert_project_data(db: Session, repo_data: dict):
     existing_project = db.query(Project).filter(Project.repo_name == repo_data['name']).first()
@@ -113,12 +112,10 @@ def upsert_project_data(db: Session, repo_data: dict):
 
 @app.get("/")
 def health_check():
-    """Matches the root URL: .../default/portfolio-backend-api/"""
-    return {"status": "healthy", "message": "Global Root Reached"}
+    return {"status": "healthy", "message": "API and Webhooks are ready"}
 
 @app.get("/api/projects")
 def get_projects_from_db(db: Session = Depends(get_db)):
-    """Matches: .../default/portfolio-backend-api/api/projects"""
     return db.query(Project).all()
 
 @app.post("/api/sync-github")
@@ -127,7 +124,6 @@ def sync_with_github(db: Session = Depends(get_db)):
     url = f"https://api.github.com/users/{username}/repos"
     headers = {"User-Agent": "FastAPI-Portfolio-App"}
     response = requests.get(url, headers=headers)
-    
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail="GitHub API Error")
 
@@ -137,13 +133,42 @@ def sync_with_github(db: Session = Depends(get_db)):
         langs_response = requests.get(lang_url, headers=headers)
         repo['languages'] = list(langs_response.json().keys()) if langs_response.status_code == 200 else []
         upsert_project_data(db, repo)
+    return {"message": f"Synced {len(repos)} projects"}
+
+# --- CORRECTED WEBHOOK ROUTE (Must be @app.post) ---
+@app.post("/api/github-webhook")
+async def github_webhook(request: Request, db: Session = Depends(get_db)):
+    body = await request.body()
+    signature = request.headers.get("X-Hub-Signature-256")
+    secret = os.getenv("GITHUB_WEBHOOK_SECRET")
+
+    if not validate_hmac(signature, body, secret):
+        print("❌ Webhook validation failed: Invalid Signature")
+        raise HTTPException(status_code=403, detail="Invalid signature")
     
-    return {"message": f"Synced {len(repos)} projects to Database."}
+    payload = json.loads(body)
+    repo_data = payload.get("repository", {})
+    repo_name = repo_data.get("name")
+    
+    print(f"✅ Webhook received for: {repo_name}")
+
+    # Handle Push events
+    if "pusher" in payload:
+        sync_data = {
+            "name": repo_name,
+            "stargazers_count": repo_data.get("stargazers_count"),
+            "languages": repo_data.get("language"),
+            "homepage": repo_data.get("homepage"),
+            "topics": repo_data.get("topics", []),
+            "commit_hash": payload.get("after") 
+        }
+        upsert_project_data(db, sync_data)
+        return {"status": "Updated via Webhook"}
+
+    return {"status": "Event ignored"}
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
-    """Debug route to help see what AWS is sending if it still fails."""
-    return {"message": "You hit the catch-all route!", "path_received": full_path}
+    return {"message": "Default route", "path_received": full_path}
 
-# Lambda handler
 handler = Mangum(app, lifespan="off")
