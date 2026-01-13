@@ -1,7 +1,7 @@
 // frontend/src/api/projectsApi.js
 // test
 // Ensure this matches your Render URL exactly, without a trailing slash
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const API_URL = import.meta.env.VITE_API_URL || "https://spzm0j53b9.execute-api.us-east-2.amazonaws.com/default/portfolio-backend-api";
 
 export const projectsApi = {
   async getProjects() {
