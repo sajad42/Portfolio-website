@@ -128,11 +128,19 @@ def sync_with_github(db: Session = Depends(get_db)):
         raise HTTPException(status_code=500, detail="GitHub API Error")
 
     repos = response.json()
+    github_repo_names = set()
+    
     for repo in repos:
         lang_url = repo.get('languages_url')
         langs_response = requests.get(lang_url, headers=headers)
         repo['languages'] = list(langs_response.json().keys()) if langs_response.status_code == 200 else []
         upsert_project_data(db, repo)
+        github_repo_names.add(repo['name'])
+    
+    # Delete projects that no longer exist on GitHub
+    db.query(Project).filter(~Project.repo_name.in_(github_repo_names)).delete(synchronize_session=False)
+    db.commit()
+    
     return {"message": f"Synced {len(repos)} projects"}
 
 # --- CORRECTED WEBHOOK ROUTE (Must be @app.post) ---
