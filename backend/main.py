@@ -67,6 +67,7 @@ def extract_status_from_topics(topics):
 
 def generate_ai_description(repo_name: str, owner: str = "sajad42") -> str:
     readme_content = ""
+    commits_content = ""
     try:
         # Fetch README content from GitHub
         readme_url = f"https://api.github.com/repos/{owner}/{repo_name}/readme"
@@ -75,9 +76,19 @@ def generate_ai_description(repo_name: str, owner: str = "sajad42") -> str:
         if resp.status_code == 200:
             readme_content = resp.text[:3000]  # Truncate to avoid token limits
 
-        prompt = f"Briefly describe the GitHub project: {repo_name}"
+        # Fetch last 5 commits
+        commits_url = f"https://api.github.com/repos/{owner}/{repo_name}/commits?per_page=5"
+        commits_resp = requests.get(commits_url, headers={"Accept": "application/vnd.github.v3+json"})
+        if commits_resp.status_code == 200:
+            commits = commits_resp.json()
+            if isinstance(commits, list):
+                commits_content = "\n".join([f"- {c.get('commit', {}).get('message', '').splitlines()[0]}" for c in commits])
+
+        prompt = f"Provide a concise summary (max 5 sentences) of the GitHub project '{repo_name}', this description will be used for a portfolio website."
         if readme_content:
             prompt += f"\n\nHere is the README content:\n{readme_content}"
+        if commits_content:
+            prompt += f"\n\nRecent commits:\n{commits_content}"
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",
