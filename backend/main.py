@@ -65,11 +65,23 @@ def extract_status_from_topics(topics):
     if "status-development" in topics: return "In Development"
     return "Planning"
 
-def generate_ai_description(repo_name: str) -> str:
+def generate_ai_description(repo_name: str, owner: str = "sajad42") -> str:
+    readme_content = ""
     try:
+        # Fetch README content from GitHub
+        readme_url = f"https://api.github.com/repos/{owner}/{repo_name}/readme"
+        headers = {"Accept": "application/vnd.github.v3.raw"}
+        resp = requests.get(readme_url, headers=headers)
+        if resp.status_code == 200:
+            readme_content = resp.text[:3000]  # Truncate to avoid token limits
+
+        prompt = f"Briefly describe the GitHub project: {repo_name}"
+        if readme_content:
+            prompt += f"\n\nHere is the README content:\n{readme_content}"
+
         response = client.chat.completions.create(
             model="gpt-4o-mini",
-            messages=[{"role": "user", "content": f"Briefly describe the GitHub project: {repo_name}"}]
+            messages=[{"role": "user", "content": prompt}]
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
@@ -82,7 +94,8 @@ def upsert_project_data(db: Session, repo_data: dict):
     status = extract_status_from_topics(repo_data.get('topics', []))
     
     if not existing_project or not existing_project.ai_description:
-        ai_description = generate_ai_description(repo_data['name'])
+        owner = repo_data.get("owner", {}).get("login", "sajad42")
+        ai_description = generate_ai_description(repo_data['name'], owner)
     
     stmt = insert(Project).values(
         repo_name=repo_data['name'],
@@ -164,6 +177,7 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
     if "pusher" in payload:
         sync_data = {
             "name": repo_name,
+            "owner": repo_data.get("owner", {}),
             "stargazers_count": repo_data.get("stargazers_count"),
             "languages": repo_data.get("language"),
             "homepage": repo_data.get("homepage"),
