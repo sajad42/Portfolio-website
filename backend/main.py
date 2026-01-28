@@ -84,7 +84,7 @@ def generate_ai_description(repo_name: str, owner: str = "sajad42") -> str:
             if isinstance(commits, list):
                 commits_content = "\n".join([f"- {c.get('commit', {}).get('message', '').splitlines()[0]}" for c in commits])
 
-        prompt = f"Provide a concise summary (max 5 sentences) of the GitHub project '{repo_name}', this description will be used for a portfolio website."
+        prompt = f"Provide a concise summary (max 4 sentences) of the GitHub project '{repo_name}', this description will be used for a portfolio website."
         if readme_content:
             prompt += f"\n\nHere is the README content:\n{readme_content}"
         if commits_content:
