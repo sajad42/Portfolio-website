@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "https://portfolio-backend-<your-hash>-uc.a.run.app";
+const API_URL = import.meta.env.VITE_API_URL || "https://portfolio-website-600650119783.us-east1.run.app";
 
 export const projectsApi = {
   async getProjects() {
