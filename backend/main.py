@@ -131,7 +131,7 @@ def sync_with_github(db: Session = Depends(get_db)):
     username = "sajad42"
     url = f"https://api.github.com/users/{username}/repos"
     headers = {"User-Agent": "FastAPI-Portfolio-App"}
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers) //test
     if response.status_code != 200:
         raise HTTPException(status_code=500, detail="GitHub API Error")
 
