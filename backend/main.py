@@ -9,16 +9,13 @@ from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
 from openai import OpenAI
 from dotenv import load_dotenv
-from mangum import Mangum
-
 # Import local database modules
 from database import SessionLocal, Project, init_db
 
 load_dotenv()
 init_db()  # Ensure tables are created on startup
 
-# Setting root_path helps Swagger UI find /openapi.json correctly on AWS
-app = FastAPI(root_path="/default/portfolio-backend-api")
+app = FastAPI()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app.add_middleware(
@@ -27,21 +24,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# --- THE UNIVERSAL PATH CLEANER ---
-@app.middleware("http")
-async def fix_gateway_pathing(request: Request, call_next):
-    path = request.scope["path"]
-    
-    # Strip prefixes if they are doubled up by Mangum/Gateway
-    path = path.replace("/default", "")
-    path = path.replace("/portfolio-backend-api", "")
-    
-    if not path.startswith("/"):
-        path = "/" + path
-    
-    request.scope["path"] = path.replace("//", "/")
-    return await call_next(request)
 
 # --- DEPENDENCIES & HELPERS ---
 
@@ -202,6 +184,4 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
-    return {"message": "Default route", "path_receivedd": full_path}
-
-handler = Mangum(app, lifespan="off")
+    return {"message": "Default route", "path_received": full_path}
