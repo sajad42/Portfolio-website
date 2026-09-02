@@ -38,7 +38,9 @@ def validate_hmac(signature: str, payload: bytes, secret: str) -> bool:
     if not signature or not secret:
         return False
     expected = hmac.new(secret.encode('utf-8'), payload, hashlib.sha256).hexdigest()
-    received = signature.replace('sha256=', '') if signature.startswith('sha256=') else signature
+    if not signature.startswith('sha256='):
+        return False
+    received = signature[len('sha256='):]
     return hmac.compare_digest(expected, received)
 
 def extract_status_from_topics(topics):
@@ -166,21 +168,36 @@ async def github_webhook(request: Request, db: Session = Depends(get_db)):
     
     print(f"✅ Webhook received for: {repo_name}")
 
+    event_type = request.headers.get("X-GitHub-Event")
+
     # Handle Push events
-    if "pusher" in payload:
+    if event_type == "push":
+        lang_resp = requests.get(
+            f"https://api.github.com/repos/sajad42/{repo_name}/languages",
+            headers={"User-Agent": "FastAPI-Portfolio-App"}
+        )
+        languages = list(lang_resp.json().keys()) if lang_resp.status_code == 200 else []
+
         sync_data = {
             "name": repo_name,
             "owner": repo_data.get("owner", {}),
-            "stargazers_count": repo_data.get("stargazers_count"),
-            "languages": repo_data.get("language"),
+            "stargazers_count": repo_data.get("stargazers_count", 0),
+            "languages": languages,
             "homepage": repo_data.get("homepage"),
+            "html_url": repo_data.get("html_url"),
             "topics": repo_data.get("topics", []),
-            "commit_hash": payload.get("after") 
+            "commit_hash": payload.get("after")
         }
         upsert_project_data(db, sync_data)
         return {"status": "Updated via Webhook"}
 
-    return {"status": "Event ignored"}
+    # Handle repo deleted or made private
+    if event_type == "repository" and payload.get("action") in ("deleted", "privatized"):
+        db.query(Project).filter(Project.repo_name == repo_name).delete()
+        db.commit()
+        return {"status": f"Project {repo_name} removed"}
+
+    return {"status": f"Event '{event_type}' ignored"}
 
 @app.get("/{full_path:path}")
 async def catch_all(full_path: str):
