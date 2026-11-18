@@ -8,7 +8,7 @@ export const useWindowManager = (windowConfig) => {
         isOpen: config.initiallyOpen || false,
         isMinimized: false,
         isMaximized: false,
-        zIndex: config.initiallyOpen ? index + 1 : 0
+        zIndex: config.initiallyOpen ? (config.initialZIndex ?? (index + 1)) : 0
       };
       return acc;
     }, {});

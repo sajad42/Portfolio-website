@@ -6,9 +6,10 @@ export const WINDOW_CONFIG = {
   about: {
     title: 'Sajad — About Me',
     icon: '/images/icons/agent.png',
-    defaultPosition: { x: 250, y: 80 },
+    defaultPosition: { x: 220, y: 70 },
     defaultSize: { width: 500, height: 280 },
     initiallyOpen: true,
+    initialZIndex: 1,
     content: (
       <div className="space-y-3 text-xs leading-relaxed">
         <p>
@@ -36,7 +37,7 @@ export const WINDOW_CONFIG = {
     icon: '/images/icons/contact-me.png',
     defaultPosition: { x: 180, y: 60 },
     defaultSize: { width: 350, height: 180 },
-    initiallyOpen: true,
+    initiallyOpen: false,
     content: (
       <div className="space-y-3 text-xs">
         <div className="flex items-center gap-2">
@@ -84,8 +85,10 @@ export const WINDOW_CONFIG = {
   computer: {
     title: 'My Computer',
     icon: '/images/icons/about-me.png',
-    defaultPosition: { x: 320, y: 130 },
+    defaultPosition: { x: 300, y: 130 },
     defaultSize: { width: 520, height: 360 },
+    initiallyOpen: true,
+    initialZIndex: 2,
     content: <MyComputerPage />,
   },
 
