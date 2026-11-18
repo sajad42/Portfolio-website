@@ -69,4 +69,4 @@ def init_db():
         Base.metadata.create_all(bind=engine)
         print("✅ Database tables verified/created.")
     else:
-        print("❌ Cannot initialize tables - no connection.")
+        print("❌ Cannot initialize tables - no connection.") 
