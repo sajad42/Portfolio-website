@@ -68,12 +68,11 @@ export const useProjects = () => {
 const getStaticProjects = () => [
   {
     id: 1,
-    name: 'StudyConnect Platform',
-    tech: 'Spring Boot, AWS, Java',
-    description: 'Full-stack platform for students',
-    status: 'Active Development',
-    sourceUrl: 'https://github.com/sajad42/studyconnect',
-    demoUrl: 'https://d3hl37aapqqsoq.cloudfront.net/'
+    repo_name: 'StudyConnect Platform',
+    languages: ['Java', 'Spring Boot', 'AWS'],
+    ai_description: 'Full-stack platform for students.',
+    project_status: 'In Development',
+    project_source_url: 'https://github.com/sajad42/studyconnect',
+    homepage_url: 'https://d3hl37aapqqsoq.cloudfront.net/'
   }
-  // ... other projects
 ];
