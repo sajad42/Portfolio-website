@@ -7,16 +7,24 @@ from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy.dialects.postgresql import insert
+from pathlib import Path
 from openai import OpenAI
 from dotenv import load_dotenv
 # Import local database modules
 from database import SessionLocal, Project, init_db
 
-load_dotenv()
+# Load .env from script's directory if available
+env_path = Path(__file__).parent / ".env"
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path)
+else:
+    load_dotenv()
+
 init_db()  # Ensure tables are created on startup
 
 app = FastAPI()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai_api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=openai_api_key) if openai_api_key else None
 
 app.add_middleware(
     CORSMiddleware,
@@ -73,6 +81,9 @@ def generate_ai_description(repo_name: str, owner: str = "sajad42") -> str:
             prompt += f"\n\nHere is the README content:\n{readme_content}"
         if commits_content:
             prompt += f"\n\nRecent commits:\n{commits_content}"
+
+        if not client:
+            return "AI description currently unavailable"
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",

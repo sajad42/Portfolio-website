@@ -81,7 +81,7 @@ export const useWindowManager = (windowConfig) => {
     const openWins = Object.values(windows).filter(w => w.isOpen && !w.isMinimized);
     const maxZ = openWins.length === 0 ? 0 : Math.max(...openWins.map(w => w.zIndex));
     return Object.entries(windows)
-      .filter(([_, state]) => state.isOpen)
+      .filter(([, state]) => state.isOpen)
       .map(([id, state]) => ({
         id,
         title: windowConfig[id]?.title || id.charAt(0).toUpperCase() + id.slice(1),
