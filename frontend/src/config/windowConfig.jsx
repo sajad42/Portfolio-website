@@ -1,197 +1,157 @@
 import React from 'react';
 import { ProjectsPage } from '../components/ProjectsPage';
+import { MyComputerPage } from '../components/MyComputerPage';
 
 export const WINDOW_CONFIG = {
   about: {
-    title: 'Sajad',
+    title: 'Sajad — About Me',
     icon: '/images/icons/agent.png',
-    defaultPosition: { x: 250, y: 100 },
+    defaultPosition: { x: 250, y: 80 },
     defaultSize: { width: 500, height: 280 },
     initiallyOpen: true,
     content: (
-      <div className="space-y-4 text-sm leading-relaxed">
+      <div className="space-y-3 text-xs leading-relaxed">
         <p>
-          I am a Computer Science undergraduate student with a strong interest in software engineering and modern web development. I enjoy building practical, user-focused applications and turning ideas into clean, functional products.
-
-My experience spans frontend and full-stack development. I have worked with React and Tailwind CSS on the frontend, and with Spring Boot and JWT-based authentication on the backend. I am also familiar with deploying and running applications using Docker and AWS.
-
-I am highly motivated to keep learning through hands-on projects, competitive programming, and exploring new technologies. I am particularly interested in scalable systems, real-world problem solving, and building software that is both reliable and enjoyable to use.
+          I am a Computer Science undergraduate student at Concordia University with a strong
+          interest in software engineering and modern web development. I enjoy building practical,
+          user-focused applications and turning ideas into clean, functional products.
+        </p>
+        <p>
+          My experience spans frontend and full-stack development. I have worked with React and
+          Tailwind CSS on the frontend, and with Spring Boot and JWT-based authentication on the
+          backend. I am also familiar with deploying and running applications using Docker and AWS.
+        </p>
+        <p>
+          I am highly motivated to keep learning through hands-on projects, competitive
+          programming, and exploring new technologies. I am particularly interested in scalable
+          systems, real-world problem solving, and building software that is both reliable and
+          enjoyable to use.
         </p>
       </div>
-    )
+    ),
   },
-  
+
   contact: {
     title: 'Contact',
     icon: '/images/icons/contact-me.png',
-    defaultPosition: { x: 200, y: 50 },
-    defaultSize: { width: 350, height: 200 },
+    defaultPosition: { x: 180, y: 60 },
+    defaultSize: { width: 350, height: 180 },
     initiallyOpen: true,
     content: (
-      <div className="space-y-2">
+      <div className="space-y-3 text-xs">
         <div className="flex items-center gap-2">
-          <span className="font-bold">Email:</span>
-          <a href="mailto:sajad.alizada2014@gmail.com" className="text-primary underline hover:text-primary/80">
+          <span className="font-bold w-14 shrink-0">📧 Email:</span>
+          <a
+            href="mailto:sajad.alizada2014@gmail.com"
+            className="underline text-blue-800"
+            style={{ cursor: 'default' }}
+          >
             sajad.alizada2014@gmail.com
           </a>
         </div>
         <div className="flex items-center gap-2">
-          <span className="font-bold">To:</span>
-          <span 
-            className="bg-input px-2 py-0.5 flex-1"
-            style={{
-              border: '2px solid',
-              borderColor: '#808080 white white #808080',
-              boxShadow: 'inset 1px 1px 0 #404040',
-            }}
+          <span className="font-bold w-14 shrink-0">💼 LinkedIn:</span>
+          <a
+            href="https://www.linkedin.com/in/sajad-ali-zada-732241a9"
+            target="_blank"
+            rel="noreferrer"
+            className="underline text-blue-800"
+            style={{ cursor: 'default' }}
           >
-            recipient@email.com
-          </span>
+            sajad-ali-zada
+          </a>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-bold w-14 shrink-0">🐙 GitHub:</span>
+          <a
+            href="https://github.com/sajad42"
+            target="_blank"
+            rel="noreferrer"
+            className="underline text-blue-800"
+            style={{ cursor: 'default' }}
+          >
+            github.com/sajad42
+          </a>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="font-bold w-14 shrink-0">📍 City:</span>
+          <span>Montreal, QC 🍁</span>
         </div>
       </div>
-    )
+    ),
   },
 
   computer: {
     title: 'My Computer',
     icon: '/images/icons/about-me.png',
-    defaultPosition: { x: 300, y: 150 },
-    defaultSize: { width: 600, height: 380 },
-    content: (
-      <div className="bg-[#c0c0c0] p-1 text-[11px] font-sans">
-        {/* Tabs */}
-        <div className="flex  mb-1">
-          <div 
-            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
-            style={{
-              border: '2px solid',
-              borderColor: 'white #808080 #c0c0c0 white'
-            }}
-          >
-            General
-          </div>
-          <div 
-            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
-            style={{
-              border: '2px solid',
-              borderColor: 'white #808080 #c0c0c0 white'
-            }}
-          >
-            Device Manager
-          </div>
-          <div 
-            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
-            style={{
-              border: '2px solid',
-              borderColor: 'white #808080 #c0c0c0 white'
-            }}
-          >
-            Hardware Profiles
-          </div>
-          <div 
-            className="px-2 py-1 bg-[#c0c0c0] z-10 -mb-[2px]"
-            style={{
-              border: '2px solid',
-              borderColor: 'white #808080 #c0c0c0 white'
-            }}
-          >
-            performance
-          </div>
-        </div>
-
-        {/* Content */}
-        <div 
-          className="p-4 bg-transparent"
-          style={{
-            border: '2px solid',
-            borderColor: '#808080 white white #808080',
-            boxShadow: 'inset 1px 1px 0 #404040'
-          }}
-        >
-          <div className="flex gap-6 items-start">
-            {/* Icon */}
-            <div 
-              className="w-16 h-16 flex items-center justify-center border-none bg-transparent"
-            >
-              <img 
-                className='border-none bg-transparent'
-                src="/images/icons/pc.png" 
-                alt="" />
-            </div>
-
-            {/* Info */}
-            <div className="text-black text-xs space-y-4">
-              <div><strong>System:</strong></div>
-              <div className='ml-8'><strong>User:</strong><br></br>Sajad Ali Zada</div>
-              <div><strong>Location:</strong> Montreal, QC</div>
-              <div><strong>Education:</strong> Concordia University, Computer Science</div>
-              <div><strong>OS:</strong> Human_Interface_v2.0</div>
-              <div><strong>Uptime:</strong> 23 Years</div>
-            </div>
-          </div>
-
-         
-        </div>
-         {/* Buttons */}
-          <div className="flex justify-end gap-2 mt-4">
-            <button 
-              className="px-4 py-1 text-black text-xs"
-              style={{
-                background: 'linear-gradient(90deg, #c1c1c1 0%, #cccacaff 100%)',
-                border: '2px solid',
-                borderColor: 'white #808080 #808080 white'
-              }}
-            >
-              OK
-            </button>
-          </div>
-      </div>
-    )
+    defaultPosition: { x: 320, y: 130 },
+    defaultSize: { width: 520, height: 360 },
+    content: <MyComputerPage />,
   },
 
   cv: {
     title: 'My CV',
     icon: '/images/icons/my-CV.png',
-    defaultPosition: { x: 250, y: 50 },
+    defaultPosition: { x: 240, y: 60 },
     defaultSize: { width: 500, height: 600 },
     content: (
       <div className="flex justify-center">
-        <img src="/images/sajad-resume.png" alt="Sajad's Resume" className="max-w-full h-auto" />
+        <img
+          src="/images/sajad-resume.png"
+          alt="Sajad's Resume"
+          className="max-w-full h-auto"
+          draggable={false}
+        />
       </div>
-    )
+    ),
   },
 
   history: {
     title: 'History',
     icon: '/images/icons/help-book.png',
-    defaultPosition: { x: 400, y: 250 },
-    defaultSize: { width: 450, height: 350 },
+    defaultPosition: { x: 420, y: 220 },
+    defaultSize: { width: 420, height: 300 },
     content: (
-      <div className="space-y-4 text-sm leading-relaxed">
-        <h3 className="font-bold text-base mb-2">Professional Journey</h3>
-        <div className="space-y-3">
+      <div className="space-y-4 text-xs leading-relaxed">
+        <h3 className="font-bold text-sm border-b border-gray-400 pb-1 mb-3">
+          📋 Professional Journey
+        </h3>
+        <div className="space-y-4">
           <div>
-            <h4 className="font-semibold">Software Engineer at Compound</h4>
-            <p className="text-xs text-gray-600">Building scalable AI applications</p>
+            <div className="flex items-center gap-2 font-bold">
+              <span>💼</span>
+              <span>Software Engineer — Compound</span>
+            </div>
+            <p className="ml-6 text-gray-600 text-[11px]">Building scalable AI applications</p>
           </div>
           <div>
-            <h4 className="font-semibold">Computer Science Studies</h4>
-            <p className="text-xs text-gray-600">Concorida University</p>
+            <div className="flex items-center gap-2 font-bold">
+              <span>🎓</span>
+              <span>Computer Science — Concordia University</span>
+            </div>
+            <p className="ml-6 text-gray-600 text-[11px]">Montreal, QC · In progress</p>
           </div>
           <div>
+            <div className="flex items-center gap-2 font-bold">
+              <span>🚀</span>
+              <span>Open Source & Side Projects</span>
+            </div>
+            <p className="ml-6 text-gray-600 text-[11px]">
+              Portfolio website, StudyConnect, and more on GitHub
+            </p>
           </div>
         </div>
       </div>
-    )
+    ),
   },
 
   projects: {
     title: 'Projects',
     icon: '/images/icons/joy.png',
-    defaultPosition: { x: 150, y: 100 },
-    defaultSize: { width: 700, height: 400 },
-    content: <ProjectsPage />
-  }
+    defaultPosition: { x: 140, y: 90 },
+    defaultSize: { width: 680, height: 420 },
+    content: <ProjectsPage />,
+  },
 };
 
 export const DESKTOP_ICONS = [
@@ -201,18 +161,18 @@ export const DESKTOP_ICONS = [
   { id: 'history', icon: '/images/icons/help-book.png', label: 'History', type: 'window' },
   { id: 'cv', icon: '/images/icons/my-CV.png', label: 'My CV', type: 'window' },
   { id: 'projects', icon: '/images/icons/joy.png', label: 'Projects', type: 'window' },
-  { 
-    id: 'github', 
-    icon: '/images/icons/github.png', 
-    label: 'GitHub', 
+  {
+    id: 'github',
+    icon: '/images/icons/github.png',
+    label: 'GitHub',
     type: 'external',
-    url: 'https://github.com/sajad42'
+    url: 'https://github.com/sajad42',
   },
-  { 
-    id: 'linkedin', 
-    icon: '/images/icons/linkedin.png', 
-    label: 'LinkedIn', 
+  {
+    id: 'linkedin',
+    icon: '/images/icons/linkedin.png',
+    label: 'LinkedIn',
     type: 'external',
-    url: 'https://www.linkedin.com/in/sajad-ali-zada-732241a9'
-  }
+    url: 'https://www.linkedin.com/in/sajad-ali-zada-732241a9',
+  },
 ];

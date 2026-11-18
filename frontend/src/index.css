@@ -1,5 +1,60 @@
 @import "tailwindcss";
 
 @theme {
-  --font-win98: "Pixelify Sans", sans-serif;
+  --font-win98: 'MS Sans Serif', Tahoma, 'Pixelify Sans', sans-serif;
+}
+
+/* Win98 system font throughout */
+* {
+  font-family: 'MS Sans Serif', Tahoma, 'Pixelify Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Win98 uses the arrow cursor almost everywhere */
+body, button, input, select, textarea, label {
+  cursor: default;
+}
+
+/* Links stay pointer */
+a {
+  cursor: pointer;
+}
+
+/* Disable anti-aliasing for a crisper, pixel-art feel */
+* {
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: auto;
+}
+
+/* Win98 scrollbar — simple inset style */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 white white #808080;
+}
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: white #404040 #404040 white;
+}
+::-webkit-scrollbar-corner {
+  background: #c0c0c0;
+}
+::-webkit-scrollbar-button {
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: white #404040 #404040 white;
+  display: block;
+  height: 16px;
+  width: 16px;
+}
+
+/* Radio buttons inherit cursor */
+input[type="radio"] {
+  cursor: default;
+  accent-color: #000080;
 }

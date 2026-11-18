@@ -11,12 +11,13 @@ const Home = () => {
     openWindow,
     closeWindow,
     focusWindow,
-    getMaxZIndex,
-    taskbarItems
+    minimizeWindow,
+    maximizeWindow,
+    taskbarItems,
   } = useWindowManager(WINDOW_CONFIG);
 
   const handleIconClick = (id) => {
-    const icon = DESKTOP_ICONS.find(icon => icon.id === id);
+    const icon = DESKTOP_ICONS.find(i => i.id === id);
     if (icon?.type === 'external') {
       window.open(icon.url, '_blank');
     } else {
@@ -27,18 +28,17 @@ const Home = () => {
   return (
     <div className="h-screen w-screen overflow-hidden bg-[hsl(180,100%,25%)] relative select-none">
       <Desktop icons={DESKTOP_ICONS} onIconClick={handleIconClick} />
-      
-      <WindowManager 
+
+      <WindowManager
         windows={windows}
         windowConfig={WINDOW_CONFIG}
         onClose={closeWindow}
         onFocus={focusWindow}
+        onMinimize={minimizeWindow}
+        onMaximize={maximizeWindow}
       />
-      
-      <Taskbar 
-        items={taskbarItems}
-        onStartClick={() => console.log('Start menu clicked')}
-      />
+
+      <Taskbar items={taskbarItems} />
     </div>
   );
 };
